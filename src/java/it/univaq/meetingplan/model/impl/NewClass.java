@@ -11,3 +11,4 @@ package it.univaq.meetingplan.model.impl;
 public class NewClass {
     
 }
+s

@@ -10,4 +10,4 @@ package it.univaq.meetingplan.model;
  */
 public class NewClass {
     
-}
+}e
