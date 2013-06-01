@@ -37,7 +37,7 @@ import javax.imageio.ImageIO;
  */
 public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
     
-    private PreparedStatement gUtente,aUtente,uUtente,dUtente;
+    private PreparedStatement gUtente,aUtente,uUtente,dUtente,gGruppi,aGruppi,uGruppi,dGruppi;
     
     public MeetingplanDataLayerMysqlImpl(Connection connection) throws SQLException {
 
@@ -46,6 +46,11 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
         aUtente = connection.prepareStatement("INSERT INTO utente (nome,cognome,mail,username) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
         uUtente = connection.prepareStatement("UPDATE utente SET nome=?,cognome=?,mail=?,username=? WHERE id=?");
         dUtente = connection.prepareStatement("DELETE FROM utente WHERE id=?");
+        
+        gGruppi = connection.prepareStatement("SELECT * FROM gruppi WHERE id=?");
+        aGruppi = connection.prepareStatement("INSERT INTO gruppi (tipo) VALUES(?)", Statement.RETURN_GENERATED_KEYS);
+        uGruppi = connection.prepareStatement("UPDATE gruppi SET tipo=? WHERE id=?");
+        dGruppi = connection.prepareStatement("DELETE FROM gruppi WHERE id=?");
     }
     
     public Utente createUtente() {
@@ -86,30 +91,13 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
             aUtente.setString(4,iUtente.getUsername());
             
             if (aUtente.executeUpdate() == 1) {
-                //per leggere la chiave generata dal database
-                //per il record appena inserito, usiamo il metodo
-                //getGeneratedKeys sullo statement.
-                //to read the generated record key from the database
-                //we use the getGeneratedKeys method on the same statement
+                
                 keys = aUtente.getGeneratedKeys();
-                //il valore restituito è un ResultSet con un record
-                //per ciascuna chiave generata (uno solo nel nostro caso)
-                //the returned value is a ResultSet with a distinct record for
-                //each generated key (only one in our case)
+               
                 if (keys.next()) {
-                    //i campi del record sono le componenti della chiave
-                    //(nel nostro caso, un solo intero)
-                    //the record fields are the key componenets
-                    //(a single integer in our case)
+                   
                     return getUtente(keys.getInt(1));
-                    //restituiamo la foto appena inserita RICARICATA
-                    //dal database tramite le API del modello. In tal
-                    //modo terremo conto di ogni modifica apportata
-                    //durante la fase di inserimento
-                    //we return the just-inserted photo RELOADED from the
-                    //database through our API. In this way, the resulting
-                    //object will ambed any data correction performed by
-                    //the DBMS
+                    
                 }
     
     }
@@ -159,7 +147,7 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
         ResultSet keys = null;
         try {
            
-            aUtente.setString(1,iUtente.getNome() );
+            aUtente.setString(1,iUtente.getNome() );//verificare se va messo uUtente e non aUtente
             aUtente.setString(2,iUtente.getCognome());
             aUtente.setString(3,iUtente.getMail());
             aUtente.setString(4,iUtente.getUsername()); 
@@ -173,6 +161,140 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
     
     
     }
+    
+    
+    
+    
+    
+    
+    
+    public Gruppi createGruppi() {
+        return new GruppiMysqlImpl(this);
+    }
+    
+     public Gruppi getGruppi(int key) {
+        Gruppi result = null;
+        ResultSet rs = null;
+        try {
+            gGruppi.setInt(1, key);
+            rs = gGruppi.executeQuery();
+            if (rs.next()) {
+                result = new GruppiMysqlImpl(this, rs);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                rs.close();
+            } catch (SQLException ex) {
+                //
+            }
+        }
+        return result;
+    }
+     
+     
+    public Gruppi addGruppi(Gruppi gruppi){
+    
+     GruppiMysqlImpl iGruppi = (GruppiMysqlImpl) gruppi;
+        ResultSet keys = null;
+        try {
+           
+            aGruppi.setString(1,iGruppi.getTipo() );
+            
+            
+            if (aGruppi.executeUpdate() == 1) {
+                
+                keys = aGruppi.getGeneratedKeys();
+               
+                if (keys.next()) {
+                   
+                    return getGruppi(keys.getInt(1));
+                    
+                }
+    
+    }
+        }    catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                keys.close();
+            } catch (SQLException ex) {
+                //
+            }
+        }
+        return null;
+     
+    
+    
+    
+    
+        }
+    
+    
+    
+    public Gruppi delete(Gruppi gruppi){
+    
+     try {
+            dGruppi.setInt(1,gruppi.getKey());
+           
+            dGruppi.executeQuery();
+            
+             return gruppi;
+           
+            }
+         catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    
+    
+    
+    }
+    
+    
+    
+    public Gruppi update(Gruppi gruppi){
+    
+     GruppiMysqlImpl iGruppi = (GruppiMysqlImpl) gruppi;
+        ResultSet keys = null;
+        try {
+           
+            uGruppi.setString(1,iGruppi.getTipo());
+            uGruppi.setInt(2,iGruppi.getKey());
+            aUtente.executeUpdate();
+    }
+            catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        return null;
+     
+    
+    
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

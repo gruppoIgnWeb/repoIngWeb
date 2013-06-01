@@ -19,9 +19,8 @@ import java.util.List;
  */
 public interface MeetingplanDataLayer {
 
-    //metodi factory per gli oggetti del data model
-    //factory methods to create data model object instances
-    Utente createUtente();
+    
+    
 
  //   Riunione createRiunione();
 
@@ -31,13 +30,25 @@ public interface MeetingplanDataLayer {
     
    // Luogo createLuogo();
     
-  //  Gruppi createGruppi();
+  
 
     
- 
+    Utente createUtente();
     Utente getUtente(int key);
     Utente addUtente(Utente utente);
     Utente update(Utente utente);
     Utente delete(Utente utente);
+    
+    Gruppi createGruppi();
+    Gruppi getGruppi(int key);
+    Gruppi addGruppi(Gruppi gruppi);
+    Gruppi update(Gruppi gruppi);
+    Gruppi delete(Gruppi gruppi);
+    
+    
+    
+    
+    
+    
 
 }

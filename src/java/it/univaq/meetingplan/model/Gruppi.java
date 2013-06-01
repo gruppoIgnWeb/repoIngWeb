@@ -10,4 +10,21 @@ package it.univaq.meetingplan.model;
  */
 public interface Gruppi {
     
+     /**
+     * @return the key
+     */
+    int getKey();
+    
+     /**
+     * @return tipo
+     */
+    String getTipo();
+    
+      /**
+     * @param tipo nome to set
+     */
+    void setTipo(String tipo);
+    
+    
+    
 }
