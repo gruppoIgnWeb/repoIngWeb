@@ -1,30 +1,27 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package it.univaq.meetingplan.model;
 
-/**
+import java.util.List;
+/*
  *
- * @author Felpone
+ * @author Charlie Bellesso,Carlos Bellesso,Stefano Maglione
  */
 public interface Gruppi {
     
-     /**
-     * @return the key
-     */
+    // restituisce la chiave (read-only)
     int getKey();
     
-     /**
-     * @return tipo
-     */
+    // restituisce il tipo
     String getTipo();
     
-      /**
-     * @param tipo nome to set
-     */
+    // imposta il tipo
     void setTipo(String tipo);
     
     
+    // prendi lista con tutti i servizi che possono fare gli utenti appartenenti al mio gruppo
+    List<Servizi> getServizi();
+    
+    // prendo lista di utenti appartenenti al mio gruppo
+    List<Utente> getUtenti();
     
 }

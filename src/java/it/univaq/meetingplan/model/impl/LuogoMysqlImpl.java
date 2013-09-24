@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package it.univaq.meetingplan.model.impl;
 
 import it.univaq.meetingplan.model.Luogo;
@@ -10,9 +7,9 @@ import java.sql.SQLException;
 
 /**
  *
- * @author Felpone
+ * @author Charlie Bellesso,Carlos Bellesso,Stefano Maglione
  */
-public class LuogoMysqlImpl implements Luogo{
+public class LuogoMysqlImpl  implements Luogo{
     
     
     private int key;
@@ -43,42 +40,48 @@ public class LuogoMysqlImpl implements Luogo{
     }
     
     
+    @Override
     public int getKey() {
         return key;
     }
 
-    public void setKey(int key) {
-        this.key = key;
-    }
 
+    @Override
     public int getTipo() {
         return tipo;
     }
 
+    @Override
     public void setTipo(int tipo) {
         this.tipo = tipo;
     }
 
+    @Override
     public String getNome() {
         return nome;
     }
 
+    @Override
     public void setNome(String nome) {
         this.nome = nome;
     }
 
+    @Override
     public String getIndirizzo() {
         return indirizzo;
     }
 
+    @Override
     public void setIndirizzo(String indirizzo) {
         this.indirizzo = indirizzo;
     }
 
+    @Override
     public int getCapienza() {
         return capienza;
     }
 
+    @Override
     public void setCapienza(int capienza) {
         this.capienza = capienza;
     }

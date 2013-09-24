@@ -1,12 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.univaq.meetingplan.model;
+
+import java.util.List;
 
 /**
  *
- * @author Felpone
+ * @author Charlie Bellesso,Carlos Bellesso,Stefano Maglione
  */
 public interface Utente {
     
@@ -55,7 +53,9 @@ public interface Utente {
      */
     void setUsername(String username);
     
+    // prendi lista di gruppi di appartenenza del utente 
     
+    List<Gruppi> getGruppi();
     
     
     

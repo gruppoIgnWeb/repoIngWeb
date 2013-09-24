@@ -1,12 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package it.univaq.meetingplan.model.impl;
 
 /**
  *
- * @author Felpone
+ * @author Charlie Bellesso,Carlos Bellesso,Stefano Maglione
  */
 public class RiunioneMysqlImpl {
     

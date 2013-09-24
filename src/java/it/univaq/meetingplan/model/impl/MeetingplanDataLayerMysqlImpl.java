@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package it.univaq.meetingplan.model.impl;
 
 import it.univaq.meetingplan.model.Utente;
@@ -12,24 +9,14 @@ import it.univaq.meetingplan.model.Opzioni_riunioni;
 import it.univaq.meetingplan.model.Luogo;
 import it.univaq.meetingplan.model.Gruppi;
 
-import java.awt.Image;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -53,10 +40,12 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
         dGruppi = connection.prepareStatement("DELETE FROM gruppi WHERE id=?");
     }
     
+    @Override
     public Utente createUtente() {
         return new UtenteMysqlImpl(this);
     }
     
+    @Override
      public Utente getUtente(int key) {
         Utente result = null;
         ResultSet rs = null;
@@ -70,7 +59,8 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
             Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                rs.close();
+                if(rs!=null)rs.close();
+                
             } catch (SQLException ex) {
                 //
             }
@@ -79,6 +69,7 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
     }
      
      
+    @Override
     public Utente addUtente(Utente utente){
     
      UtenteMysqlImpl iUtente = (UtenteMysqlImpl) utente;
@@ -105,7 +96,7 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
             Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                keys.close();
+                if(keys!=null)keys.close();
             } catch (SQLException ex) {
                 //
             }
@@ -118,9 +109,8 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
     
         }
     
-    
-    
-    public Utente delete(Utente utente){
+    @Override
+    public Utente deleteUtente(Utente utente) {
     
      try {
             dUtente.setInt(1,utente.getKey());
@@ -139,9 +129,8 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
     
     }
     
-    
-    
-    public Utente update(Utente utente){
+    @Override
+    public Utente updateUtente(Utente utente) {
     
      UtenteMysqlImpl iUtente = (UtenteMysqlImpl) utente;
         ResultSet keys = null;
@@ -157,21 +146,15 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
             Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
         } 
         return null;
-     
-    
-    
     }
     
     
-    
-    
-    
-    
-    
+    @Override
     public Gruppi createGruppi() {
         return new GruppiMysqlImpl(this);
     }
     
+    @Override
      public Gruppi getGruppi(int key) {
         Gruppi result = null;
         ResultSet rs = null;
@@ -185,7 +168,7 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
             Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                rs.close();
+               if(rs!=null) rs.close();
             } catch (SQLException ex) {
                 //
             }
@@ -194,6 +177,7 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
     }
      
      
+    @Override
     public Gruppi addGruppi(Gruppi gruppi){
     
      GruppiMysqlImpl iGruppi = (GruppiMysqlImpl) gruppi;
@@ -218,22 +202,17 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
             Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                keys.close();
+                if(keys!=null)keys.close();
             } catch (SQLException ex) {
                 //
             }
         }
         return null;
-     
-    
-    
-    
     
         }
     
-    
-    
-    public Gruppi delete(Gruppi gruppi){
+    @Override
+    public Gruppi deleteGruppi(Gruppi gruppi) {
     
      try {
             dGruppi.setInt(1,gruppi.getKey());
@@ -247,14 +226,10 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
             Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-    
-    
-    
     }
     
-    
-    
-    public Gruppi update(Gruppi gruppi){
+    @Override
+    public Gruppi updateGruppi(Gruppi gruppi) {
     
      GruppiMysqlImpl iGruppi = (GruppiMysqlImpl) gruppi;
         ResultSet keys = null;
@@ -268,9 +243,127 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
             Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
         } 
         return null;
-     
-    
-    
+    }
+
+    @Override
+    public Luogo createLuogo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Opzioni_riunioni createOpzioni_riunioni() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Riunione createRiunione() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Servizi createServizi() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    @Override
+    public Luogo getLuogo(int key) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Luogo addLuogo(Luogo luogo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Luogo updateLuogo(Luogo luogo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Luogo deleteLuogo(Luogo luogo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Riunione getRiunione(int key) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Riunione addRiunione(Riunione riunione) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Riunione updateRiunione(Riunione riunione) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Riunione deleteRiunione(Riunione riunione) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Opzioni_riunioni getOpzioni_riunioni(int key) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Opzioni_riunioni addOpzioni_riunioni(Opzioni_riunioni opzioni_riunione) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Opzioni_riunioni updateOpzioni_riunioni(Opzioni_riunioni opzioni_riunione) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Opzioni_riunioni deleteOpzioni_riunioni(Opzioni_riunioni opzioni_riunione) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Servizi getServizi(int key) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Servizi addServizi(Servizi servizi) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Servizi updateServizi(Servizi servizi) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Servizi deleteServizi(Servizi servizi) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Servizi> getServiziByGruppo(Gruppi gruppo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Utente> getUtentiByGruppo(Gruppi gruppo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Luogo getLuogoByOpzioni_riunioni(Opzioni_riunioni opzioni_riunioni) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Luogo getLuogoByRiunione(Riunione riunione) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     
