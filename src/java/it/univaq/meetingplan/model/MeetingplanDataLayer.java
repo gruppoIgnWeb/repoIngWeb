@@ -94,7 +94,7 @@ public interface MeetingplanDataLayer {
     // ricevi lugo relativo ad una proposta di riunione
     Luogo getLuogoByOpzioni_riunioni(Opzioni_riunioni opzioni_riunioni);
     
-    // ricevi lugo relativo ad una riunione
+    // ricevi luogo relativo ad una riunione
     Luogo getLuogoByRiunione(Riunione riunione);
     
     

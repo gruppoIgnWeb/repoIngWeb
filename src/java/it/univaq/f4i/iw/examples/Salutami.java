@@ -1,7 +1,15 @@
 package it.univaq.f4i.iw.examples;
 
 import it.univaq.f4i.iw.framework.result.HTMLResult;
+import it.univaq.meetingplan.model.MeetingplanDataLayer;
+import it.univaq.meetingplan.model.Utente;
+import it.univaq.meetingplan.model.impl.MeetingplanDataLayerMysqlImpl;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -41,10 +49,38 @@ public class Salutami extends HttpServlet {
         }
     }
 
-    private void action_saluta_noto(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void action_saluta_noto(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
+        
+        
+         int i;
+        Statement s = null;
+        ResultSet rs = null;
+        Connection connection = null;
+        
+        
+        
+        
+        
+        
+        
         HTMLResult result = new HTMLResult(getServletContext());
         result.setTitle("Salutami!");
         result.setBody("<p>Hello, " + request.getParameter("n") + "!</p>");
+        try {
+            Class.forName(getServletContext().getInitParameter("data.jdbc.driver"));
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Salutami.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            //connessione al database locale
+            //DBMS connection
+            connection = DriverManager.getConnection(getServletContext().getInitParameter("data.jdbc.connectionstring"), getServletContext().getInitParameter("data.jdbc.username"), getServletContext().getInitParameter("data.jdbc.password"));
+        
+        MeetingplanDataLayer data=new MeetingplanDataLayerMysqlImpl(connection);
+        
+        Utente utente= data.createUtente();
+        utente.setNome(request.getParameter("n"));
+        data.addUtente(utente);
+        
         result.activate(request, response);
     }
 
@@ -76,6 +112,8 @@ public class Salutami extends HttpServlet {
             }
         } catch (IOException ex) {
             action_error(request, response, ex.getMessage());
+        } catch (SQLException ex) {
+            Logger.getLogger(Salutami.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

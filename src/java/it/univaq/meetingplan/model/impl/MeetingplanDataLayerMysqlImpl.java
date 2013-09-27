@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
     
-    private PreparedStatement gUtente,aUtente,uUtente,dUtente,gGruppi,aGruppi,uGruppi,dGruppi;
+    private PreparedStatement gUtente,aUtente,uUtente,dUtente,gGruppi,aGruppi,uGruppi,dGruppi,gIdLuogo_Riunione;
     
     public MeetingplanDataLayerMysqlImpl(Connection connection) throws SQLException {
 
@@ -38,6 +38,12 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
         aGruppi = connection.prepareStatement("INSERT INTO gruppi (tipo) VALUES(?)", Statement.RETURN_GENERATED_KEYS);
         uGruppi = connection.prepareStatement("UPDATE gruppi SET tipo=? WHERE id=?");
         dGruppi = connection.prepareStatement("DELETE FROM gruppi WHERE id=?");
+        
+        
+        
+        
+        gIdLuogo_Riunione = connection.prepareStatement("SELECT * FROM luogo_riunione WHERE id_riunione=?");
+        
     }
     
     @Override
@@ -363,7 +369,33 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
 
     @Override
     public Luogo getLuogoByRiunione(Riunione riunione) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        Luogo result = null;
+        ResultSet rs = null;
+        try {
+            gIdLuogo_Riunione.setInt(1, riunione.getKey());
+            rs = gGruppi.executeQuery();
+            if (rs.next()) {
+                result = new GruppiMysqlImpl(this, rs);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+               if(rs!=null) rs.close();
+            } catch (SQLException ex) {
+                //
+            }
+        }
+        return result;
+        
+        
+        
+        
+        
+        
+        
+        
     }
     
     

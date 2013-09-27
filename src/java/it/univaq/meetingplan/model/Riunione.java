@@ -17,7 +17,7 @@ public interface Riunione {
     String getDescrizione();
     
     // imposta descrizione
-    void setDescrizione();
+    void setDescrizione(String descrizione);
     
     // restituisce creatore, cioè l'organizzatore
     Utente getCreatore();
