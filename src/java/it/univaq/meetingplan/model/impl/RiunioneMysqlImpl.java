@@ -2,10 +2,14 @@
 package it.univaq.meetingplan.model.impl;
 
 import it.univaq.meetingplan.model.Luogo;
+import it.univaq.meetingplan.model.Opzioni_riunioni;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import it.univaq.meetingplan.model.Riunione;
 import it.univaq.meetingplan.model.Utente;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.List;
 /**
  *
  * @author Charlie Bellesso,Carlos Bellesso,Stefano Maglione
@@ -17,7 +21,7 @@ public class RiunioneMysqlImpl implements Riunione {
     private String descrizione;
     private int creatore_key;
     private Luogo luogo;
-    private String data;
+  //  private Timestamp data;
     private String conferma_flag;
     private Utente creatore;
     private MeetingplanDataLayerMysqlImpl datalayer;
@@ -32,10 +36,10 @@ public class RiunioneMysqlImpl implements Riunione {
     descrizione="";
     creatore_key=0;
     luogo=null;
-    data="";
+   // data.getTime();
     conferma_flag="";
     creatore=null;
-    datalayer=this.datalayer;
+    this.datalayer=datalayer;
     
     
     }
@@ -49,10 +53,10 @@ public class RiunioneMysqlImpl implements Riunione {
     descrizione=data.getString("descrizione");
     creatore_key=data.getInt("creatore");
     //luogo=data.getString("luogo");
-    this.data=data.getString("data");
+   //  this.data=data.getString("data");
     conferma_flag=data.getString("conferma_flag");
     creatore=null;
-    datalayer=this.datalayer;
+    this.datalayer=datalayer;
     
     
     }
@@ -110,7 +114,27 @@ public class RiunioneMysqlImpl implements Riunione {
     
     
     
+    @Override
+    public List<Opzioni_riunioni> getOpzioni_riunioni(){
+        return null;
     
+    
+    }
+
+    @Override
+    public void setLuogo(Luogo luogo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Calendar getData() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setData(Calendar data) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     
     

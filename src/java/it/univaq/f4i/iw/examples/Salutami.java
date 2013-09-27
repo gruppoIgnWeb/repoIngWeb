@@ -1,7 +1,9 @@
 package it.univaq.f4i.iw.examples;
 
 import it.univaq.f4i.iw.framework.result.HTMLResult;
+import it.univaq.meetingplan.model.Luogo;
 import it.univaq.meetingplan.model.MeetingplanDataLayer;
+import it.univaq.meetingplan.model.Riunione;
 import it.univaq.meetingplan.model.Utente;
 import it.univaq.meetingplan.model.impl.MeetingplanDataLayerMysqlImpl;
 import java.io.IOException;
@@ -55,7 +57,7 @@ public class Salutami extends HttpServlet {
          int i;
         Statement s = null;
         ResultSet rs = null;
-        Connection connection = null;
+        Connection connection;
         
         
         
@@ -63,9 +65,6 @@ public class Salutami extends HttpServlet {
         
         
         
-        HTMLResult result = new HTMLResult(getServletContext());
-        result.setTitle("Salutami!");
-        result.setBody("<p>Hello, " + request.getParameter("n") + "!</p>");
         try {
             Class.forName(getServletContext().getInitParameter("data.jdbc.driver"));
         } catch (ClassNotFoundException ex) {
@@ -77,9 +76,39 @@ public class Salutami extends HttpServlet {
         
         MeetingplanDataLayer data=new MeetingplanDataLayerMysqlImpl(connection);
         
-        Utente utente= data.createUtente();
+      /*  Utente utente= data.createUtente();
         utente.setNome(request.getParameter("n"));
-        data.addUtente(utente);
+        data.addUtente(utente);*/
+        
+        Riunione riunione=data.createRiunione();
+         riunione=data.getRiunione(1);
+        
+         Luogo luogo=riunione.getLuogo();
+        System.out.println("riga 87" + luogo.getNome());
+        
+        
+        HTMLResult result = new HTMLResult(getServletContext());
+        result.setTitle("Salutami!");
+      //  result.setBody("<p>Hello, " + luogo.getNome()+ "!</p>");
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         result.activate(request, response);
     }
