@@ -11,10 +11,10 @@ public interface Luogo {
     int getKey();
     
     // restituisce tipo
-    String getTipo();
+    int getTipo();
     
     // imposta tipo
-    void setTipo(String tipo);
+    void setTipo(int tipo);
     
     // restituisce nome
     String getNome();

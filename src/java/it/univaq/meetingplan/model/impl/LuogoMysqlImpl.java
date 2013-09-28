@@ -13,7 +13,7 @@ public class LuogoMysqlImpl  implements Luogo{
     
     
     private int key;
-    private String tipo; //   sala riunione --> 0, altro --> 1 *ancora da vedere*
+    private int tipo; //   sala riunione --> 0, altro --> 1 *ancora da vedere*
     private String nome;
     private String indirizzo;
     private int capienza;
@@ -22,7 +22,7 @@ public class LuogoMysqlImpl  implements Luogo{
     
      LuogoMysqlImpl(MeetingplanDataLayerMysqlImpl datalayer) {
         key = 0;
-        tipo = "";
+        tipo = 0;
         nome = "";
         indirizzo = "";
         capienza = 0;
@@ -33,7 +33,7 @@ public class LuogoMysqlImpl  implements Luogo{
     LuogoMysqlImpl(MeetingplanDataLayerMysqlImpl datalayer, ResultSet data) throws SQLException {
         this.datalayer = datalayer;
         key = data.getInt("id");
-        tipo = data.getString("tipo");
+        tipo = data.getInt("tipo");
         nome = data.getString("nome");
         indirizzo = data.getString("indirizzo");
         capienza = data.getInt("capienza");
@@ -47,12 +47,12 @@ public class LuogoMysqlImpl  implements Luogo{
 
 
     @Override
-    public String getTipo() {
+    public int getTipo() {
         return tipo;
     }
 
     @Override
-    public void setTipo(String tipo) {
+    public void setTipo(int tipo) {
         this.tipo = tipo;
     }
 

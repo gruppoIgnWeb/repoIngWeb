@@ -97,7 +97,8 @@ public interface MeetingplanDataLayer {
     // ricevi luogo relativo ad una riunione
     Luogo getLuogoByRiunione(Riunione riunione);
     
-    
+    // ricevi utente relativo ad una riunione
+    Utente getUtenteByRiunioni(Riunione riunioni);
     
     
 

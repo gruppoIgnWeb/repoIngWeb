@@ -15,7 +15,7 @@ public interface Servizi {
     String getNome();
     
     // imposta il nome del servizio
-    void setNome();
+    void setNome(String nome);
     
     // prendo lista di gruppi che sono autorizzati ad far uso del servizio
     List<Gruppi> getGruppi();

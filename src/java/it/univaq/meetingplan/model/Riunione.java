@@ -1,6 +1,7 @@
 
 package it.univaq.meetingplan.model;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 
@@ -33,11 +34,11 @@ public interface Riunione {
     
     // restituisce la data o intervallo di tempo nel quale si effetuerà la riunione.
     /********* IMPORTANTE : NON SONO SICURO SE IL TIPO CALENDAR è ADATTO .. è UNA COSA DA RIVALUTARE *********/
-    Calendar getData();
+    Timestamp getData();
     
     //imposta data della riunione 
     /********* IMPORTANTE : NON SONO SICURO SE IL TIPO CALENDAR è ADATTO .. è UNA COSA DA RIVALUTARE *********/
-    void setData(Calendar data);
+    void setData(Timestamp data);
     
     // prendi lista di proposte riunioni per la riunione
     List<Opzioni_riunioni> getOpzioni_riunioni();
