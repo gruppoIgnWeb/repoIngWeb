@@ -23,7 +23,10 @@ import java.util.logging.Logger;
  */
 public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
 
-    private PreparedStatement gUtente, aUtente, uUtente, dUtente, gGruppi, aGruppi, uGruppi, dGruppi, gRiunione, aRiunione, uRiunione, dRiunione, gOpzioni_riunione, aOpzioni_riunione, uOpzioni_riunione, dOpzioni_riunione, gServizi, aServizi, uServizi, dServizi, gLuogo, aLuogo, uLuogo, dLuogo, gIdLuogo_Riunione ;
+    private PreparedStatement gUtente, aUtente, uUtente, dUtente, gGruppi, aGruppi, uGruppi,
+            dGruppi, gRiunione, aRiunione, uRiunione, dRiunione, gOpzioni_riunione, aOpzioni_riunione,
+            uOpzioni_riunione, dOpzioni_riunione, gServizi, aServizi, uServizi, dServizi, gLuogo,
+            aLuogo, uLuogo, dLuogo, gIdLuogo_Riunione, gIdUtente_Riunione;
 
     public MeetingplanDataLayerMysqlImpl(Connection connection) throws SQLException {
 
@@ -52,7 +55,7 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
         aServizi = connection.prepareStatement("INSERT INTO servizi (nome) VALUES(?)", Statement.RETURN_GENERATED_KEYS);
         uServizi = connection.prepareStatement("UPDATE servizi SET nome=? WHERE id=?");
         dServizi = connection.prepareStatement("DELETE FROM servizi WHERE id=?");
-        
+
         gLuogo = connection.prepareStatement("SELECT * FROM luogo WHERE id=?");
         aLuogo = connection.prepareStatement("INSERT INTO luogo (tipo,nome,indirizzo,capienza) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
         uLuogo = connection.prepareStatement("UPDATE luogo SET tipo=?,nome=?,indirizzo=?,capienza=? WHERE id=?");
@@ -60,7 +63,7 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
 
 
         gIdLuogo_Riunione = connection.prepareStatement("SELECT * FROM luogo_riunione WHERE id_riunione=?");
-
+        gIdUtente_Riunione = connection.prepareStatement("SELECT * FROM utente_riunione WHERE id_riunione=?");
     }
 
     @Override
@@ -686,17 +689,17 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
     @Override
     public List<Servizi> getServiziByGruppo(Gruppi gruppo) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    }  
 
     @Override
     public List<Utente> getUtentiByGruppo(Gruppi gruppo) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    }  
 
     @Override
     public Luogo getLuogoByOpzioni_riunioni(Opzioni_riunioni opzioni_riunioni) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    }  
 
     @Override
     public Luogo getLuogoByRiunione(Riunione riunione) {
@@ -739,13 +742,42 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
         return result;
 
 
-    }
-    
-    @Override
-    public Utente getUtenteByRiunioni(Riunione riunioni){
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    
+    }  
 
+    @Override
+    public Utente getUtenteByRiunioni(Riunione riunioni) {
+
+        Utente result = null;
+        ResultSet rs = null;
+
+        try {
+
+            gIdUtente_Riunione.setInt(1, riunioni.getKey());
+            rs = gUtente.executeQuery();
+
+            if (rs.next()) {
+
+                gUtente.setInt(1, rs.getInt("id_utente"));
+                rs = gUtente.executeQuery();
+
+                if (rs != null && rs.next()) {
+
+                    result = new UtenteMysqlImpl(this, rs);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayerMysqlImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                //
+            }
+            return result;
+
+        }
+    }
 }
