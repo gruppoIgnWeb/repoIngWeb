@@ -23,7 +23,10 @@ import java.util.logging.Logger;
  */
 public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
 
-    private PreparedStatement gUtente, aUtente, uUtente, dUtente, gGruppi, aGruppi, uGruppi, dGruppi, gRiunione, aRiunione, uRiunione, dRiunione, gOpzioni_riunione, aOpzioni_riunione, uOpzioni_riunione, dOpzioni_riunione, gServizi, aServizi, uServizi, dServizi, gLuogo, aLuogo, uLuogo, dLuogo, gIdLuogo_Riunione ;
+    private PreparedStatement gUtente, aUtente, uUtente, dUtente, gGruppi, aGruppi, uGruppi, dGruppi, gRiunione,
+            aRiunione, uRiunione, dRiunione, gOpzioni_riunione, aOpzioni_riunione, uOpzioni_riunione,
+            dOpzioni_riunione, gServizi, aServizi, uServizi, dServizi, gLuogo, aLuogo, uLuogo, dLuogo,
+            gIdLuogo_Riunione, gLuogo_OpzioneRiunione ;
 
     public MeetingplanDataLayerMysqlImpl(Connection connection) throws SQLException {
 
@@ -60,7 +63,7 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
 
 
         gIdLuogo_Riunione = connection.prepareStatement("SELECT * FROM luogo_riunione WHERE id_riunione=?");
-
+        gLuogo_OpzioneRiunione = connection.prepareStatement("SELECT * FROM luogo_opzioni-riunion WHERE id_opzione-riunione=?");
     }
 
     @Override
@@ -695,7 +698,43 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
 
     @Override
     public Luogo getLuogoByOpzioni_riunioni(Opzioni_riunioni opzioni_riunioni) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        Luogo result = null;
+        ResultSet rs = null;
+        try {
+            //System.out.println(riunione.getKey());
+            gLuogo_OpzioneRiunione.setInt(1, opzioni_riunioni.getKey());
+            rs = gIdLuogo_Riunione.executeQuery();
+
+            if (rs.next()) {
+
+                try {
+                    gLuogo.setInt(1, rs.getInt("id_luogo"));
+                    rs = gLuogo.executeQuery();
+                } catch (SQLException ex) {
+                    Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+
+                if (rs != null && rs.next()) {
+
+                    result = new LuogoMysqlImpl(this, rs);
+                }
+
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                //
+            }
+        }
+        return result;
     }
 
     @Override
