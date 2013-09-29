@@ -67,6 +67,8 @@ public interface MeetingplanDataLayer {
     //elimina riunione
     Riunione deleteRiunione(Riunione riunione);
     
+    
+    List<Opzioni_riunioni> getOpzioni_riunioniByRiunione(Riunione riunione);
     //restituisce opzioni_riunione identificata tramite la sua chiave
     Opzioni_riunioni getOpzioni_riunioni(int key);
     //aggiunge opzioni_riunione

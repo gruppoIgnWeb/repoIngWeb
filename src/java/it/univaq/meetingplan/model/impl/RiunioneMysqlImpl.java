@@ -18,20 +18,22 @@ public class RiunioneMysqlImpl implements Riunione {
     private int key;
     private String descrizione;
     private Luogo luogo;
-    private Timestamp data;
+ //   private Timestamp data;
     private String conferma_flag;
     private Utente creatore;
+    private List<Opzioni_riunioni> opzioni_riunioni;
     private MeetingplanDataLayerMysqlImpl datalayer;
-
+    
     RiunioneMysqlImpl(MeetingplanDataLayerMysqlImpl datalayer) {
 
 
         key = 0;
         descrizione = "";
         luogo = null;
-        data = null;
+      //  data = null;
         conferma_flag = "";
         creatore = null;
+        opzioni_riunioni=null;
         this.datalayer = datalayer;
 
 
@@ -41,9 +43,10 @@ public class RiunioneMysqlImpl implements Riunione {
 
         key = data.getInt("id");
         descrizione = data.getString("descrizione");
-        this.data = data.getTimestamp("data");
+     //   this.data = data.getTimestamp("data");
         conferma_flag = data.getString("conferma_flag");
         creatore = null;
+        opzioni_riunioni=null;
         this.datalayer = datalayer;
 
 
@@ -81,7 +84,7 @@ public class RiunioneMysqlImpl implements Riunione {
     }
 
     @Override
-    public Luogo getLuogo() {
+    public Luogo getLuogo() {// test ok
 
         if (luogo == null) {
             luogo = datalayer.getLuogoByRiunione(this);
@@ -91,7 +94,10 @@ public class RiunioneMysqlImpl implements Riunione {
 
     @Override
     public List<Opzioni_riunioni> getOpzioni_riunioni() {
-        return null;
+         if (opzioni_riunioni == null) {
+            opzioni_riunioni = datalayer.getOpzioni_riunioniByRiunione(this);
+        }
+        return opzioni_riunioni;
     }
 
     @Override
@@ -100,12 +106,13 @@ public class RiunioneMysqlImpl implements Riunione {
     }
 
     @Override
-    public Timestamp getData() {
-        return this.data;
+     public Timestamp getData() {
+      //  return this.data;
+         return null;
     }
 
-    @Override
-    public void setData(Timestamp data) {
-        this.data = data;
+   @Override
+   public void setData(Timestamp data) {
+       // this.data = data;
     }
 }

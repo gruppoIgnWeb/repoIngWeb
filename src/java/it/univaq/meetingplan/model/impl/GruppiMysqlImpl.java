@@ -16,12 +16,13 @@ public class GruppiMysqlImpl implements Gruppi {
     private int key;
     private String tipo;
     private MeetingplanDataLayerMysqlImpl datalayer;
-    
+    private List<Servizi> servizi;
     
     
      GruppiMysqlImpl(MeetingplanDataLayerMysqlImpl datalayer) {
         key = 0;
         tipo = "";
+        servizi=null;
         this.datalayer = datalayer;
     }
 
@@ -30,7 +31,7 @@ public class GruppiMysqlImpl implements Gruppi {
         this.datalayer = datalayer;
         key = data.getInt("id");
         tipo = data.getString("tipo");
-        
+        servizi=null;
     }
 
     @Override
@@ -51,7 +52,12 @@ public class GruppiMysqlImpl implements Gruppi {
 
     @Override
     public List<Servizi> getServizi() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(servizi == null)
+        {
+            servizi=datalayer.getServiziByGruppo(this);
+        }
+        
+        return servizi;
     }
 
     @Override

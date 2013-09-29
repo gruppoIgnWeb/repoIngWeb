@@ -1,9 +1,12 @@
 package it.univaq.f4i.iw.examples;
 
 import it.univaq.f4i.iw.framework.result.HTMLResult;
+import it.univaq.meetingplan.model.Gruppi;
 import it.univaq.meetingplan.model.Luogo;
 import it.univaq.meetingplan.model.MeetingplanDataLayer;
+import it.univaq.meetingplan.model.Opzioni_riunioni;
 import it.univaq.meetingplan.model.Riunione;
+import it.univaq.meetingplan.model.Servizi;
 import it.univaq.meetingplan.model.Utente;
 import it.univaq.meetingplan.model.impl.MeetingplanDataLayerMysqlImpl;
 import java.io.IOException;
@@ -15,6 +18,8 @@ import java.sql.Statement;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletConfig;
@@ -80,11 +85,18 @@ public class Salutami extends HttpServlet {
         utente.setNome(request.getParameter("n"));
         data.addUtente(utente);*/
         
-        Riunione riunione=data.createRiunione();
-         riunione=data.getRiunione(1);
-        
-         Luogo luogo=riunione.getLuogo();
-        System.out.println("riga 87" + luogo.getNome());
+        Gruppi gruppi=data.createGruppi();
+         gruppi=data.getGruppi(1);
+        //System.out.println("riga 87" + riunione.getDescrizione());
+          List<Servizi> servizi =gruppi.getServizi();
+          Iterator<Servizi> iterator = servizi.iterator();
+	while (iterator.hasNext()) {
+            Servizi opzion=iterator.next();
+		System.out.println(opzion.getNome());
+	}
+          
+          
+        //System.out.println("riga 87" + luogo.getNome());
         
         
         HTMLResult result = new HTMLResult(getServletContext());
