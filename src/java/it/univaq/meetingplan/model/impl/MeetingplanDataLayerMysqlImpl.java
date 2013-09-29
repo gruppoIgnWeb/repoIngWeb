@@ -26,7 +26,7 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
     private PreparedStatement gUtente, aUtente, uUtente, dUtente, gGruppi, aGruppi, uGruppi, dGruppi, gRiunione,
             aRiunione, uRiunione, dRiunione, gOpzioni_riunione, aOpzioni_riunione, uOpzioni_riunione,
             dOpzioni_riunione, gServizi, aServizi, uServizi, dServizi, gLuogo, aLuogo, uLuogo, dLuogo,
-            gIdLuogo_Riunione, gLuogo_OpzioneRiunione ;
+            gIdLuogo_Riunione, gLuogo_OpzioneRiunione, gIdUtente_Riunione ;
 
     public MeetingplanDataLayerMysqlImpl(Connection connection) throws SQLException {
 
@@ -64,6 +64,8 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
 
         gIdLuogo_Riunione = connection.prepareStatement("SELECT * FROM luogo_riunione WHERE id_riunione=?");
         gLuogo_OpzioneRiunione = connection.prepareStatement("SELECT * FROM luogo_opzioni-riunion WHERE id_opzione-riunione=?");
+        gIdUtente_Riunione = connection.prepareStatement("SELECT * FROM utente_riunione WHERE id_riunione=?");
+    
     }
 
     @Override
