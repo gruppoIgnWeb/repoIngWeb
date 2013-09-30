@@ -1,2 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/Meeting_plan"/>
+<Context antiJARLocking="true" path="/Meeting_plan">
+    
+        <Resource
+        name="jdbc/meetingplanner" 
+        type="javax.sql.DataSource"
+        auth="Container"
+        driverClassName="com.mysql.jdbc.Driver"
+        url="jdbc:mysql://localhost/meetingplanner"
+        username="root"
+        password=""
+        maxActive="10"
+        maxIdle="5"
+        maxWait="10000"
+    />
+    
+</Context>

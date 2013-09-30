@@ -58,7 +58,7 @@ public interface Utente {
     List<Gruppi> getGruppi();
     
     
-    
+     public void addToGruppi(Gruppi g);
     
     
     

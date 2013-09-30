@@ -27,6 +27,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 /**
  *
@@ -69,23 +70,30 @@ public class Salutami extends HttpServlet {
         
         
         
-        
+        /*
         try {
-            Class.forName(getServletContext().getInitParameter("data.jdbc.driver"));
+            //Class.forName(getServletContext().getInitParameter("data.jdbc.driver"));
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Salutami.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
             //connessione al database locale
             //DBMS connection
+        /*
             connection = DriverManager.getConnection(getServletContext().getInitParameter("data.jdbc.connectionstring"), getServletContext().getInitParameter("data.jdbc.username"), getServletContext().getInitParameter("data.jdbc.password"));
+        */
         
-        MeetingplanDataLayer data=new MeetingplanDataLayerMysqlImpl(connection);
+            DataSource ds = (DataSource) getServletContext().getAttribute("datasource");
+            //connessione al database locale
+            //database connection
+            connection = ds.getConnection();
+            
+          MeetingplanDataLayer data=new MeetingplanDataLayerMysqlImpl(connection);
         
       /*  Utente utente= data.createUtente();
         utente.setNome(request.getParameter("n"));
         data.addUtente(utente);*/
         
-        Gruppi gruppi=data.createGruppi();
+    /*    Gruppi gruppi=data.createGruppi();
          gruppi=data.getGruppi(1);
         //System.out.println("riga 87" + riunione.getDescrizione());
           List<Servizi> servizi =gruppi.getServizi();
@@ -93,8 +101,18 @@ public class Salutami extends HttpServlet {
 	while (iterator.hasNext()) {
             Servizi opzion=iterator.next();
 		System.out.println(opzion.getNome());
-	}
+	}*/
           
+        
+        Riunione riunione= data.getRiunione(1);
+       /* Gruppi gruppi=data.getGruppi(1);
+        utente.addToGruppi(gruppi);*/
+        System.out.println("riga 87" + riunione.getData());
+        
+        
+        
+        
+        
           
         //System.out.println("riga 87" + luogo.getNome());
         

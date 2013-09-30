@@ -5,6 +5,11 @@
         <param-value>com.mysql.jdbc.Driver</param-value>
     </context-param>
     <context-param>
+        <param-name>data.
+            source</param-name>
+        <param-value>java:comp/env/jdbc/meetingplanner</param-value>
+    </context-param>
+    <context-param>
         <param-name>data.jdbc.connectionstring</param-name>
         <param-value>jdbc:mysql://localhost/meetingplanner</param-value>
     </context-param>
@@ -16,6 +21,9 @@
         <param-name>data.jdbc.password</param-name>
         <param-value> </param-value>
     </context-param>
+    <listener>
+        <listener-class>it.univaq.meetingplan.listeners.ContextInitializer</listener-class>
+    </listener>
     <servlet>
         <description>prova</description>
         <servlet-name>Hello</servlet-name>
@@ -30,6 +38,14 @@
             30
         </session-timeout>
     </session-config>
+    
+    <resource-ref>
+        <res-ref-name>jdbc/meetingplanner</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+    </resource-ref>
+    
     <welcome-file-list>
         <welcome-file>salutami</welcome-file>
     </welcome-file-list>

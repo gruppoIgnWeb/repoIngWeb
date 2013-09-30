@@ -92,6 +92,14 @@ public interface MeetingplanDataLayer {
     
     // prendo lista di utenti appartenenti al mio gruppo
     List<Utente> getUtentiByGruppo(Gruppi gruppo);
+    
+    List<Gruppi> getGruppiByUtente(Utente utente);
+    
+    List<Gruppi> getGruppiByServizi(Servizi servizi);
+    
+    void addUtenteToGruppi(Utente u,Gruppi g);
+    
+    
 
     // ricevi lugo relativo ad una proposta di riunione
     Luogo getLuogoByOpzioni_riunioni(Opzioni_riunioni opzioni_riunioni);

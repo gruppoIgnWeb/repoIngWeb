@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,9 +25,9 @@ import java.util.logging.Logger;
 public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
 
     private PreparedStatement gUtente, aUtente, uUtente, dUtente, gGruppi, aGruppi, uGruppi, dGruppi, gRiunione,
-            aRiunione, uRiunione, dRiunione, gOpzioni_riunione, aOpzioni_riunione, uOpzioni_riunione,
+            aRiunione, uRiunione, dRiunione, gOpzioni_riunione, aOpzioni_riunione,gOpzioni_Riunione, uOpzioni_riunione,
             dOpzioni_riunione, gServizi, aServizi, uServizi, dServizi, gLuogo, aLuogo, uLuogo, dLuogo,
-            gIdLuogo_Riunione, gLuogo_OpzioneRiunione, gIdUtente_Riunione ;
+            gIdLuogo_Riunione,gIdGruppi_Utente,gIdUtente_Gruppi, gIdGruppi_Servizi,gLuogo_OpzioneRiunione, gIdOpzioni_riunione_Riunione, gIdUtente_Riunione, aUtente_Gruppo;
 
     public MeetingplanDataLayerMysqlImpl(Connection connection) throws SQLException {
 
@@ -65,7 +66,13 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
         gIdLuogo_Riunione = connection.prepareStatement("SELECT * FROM luogo_riunione WHERE id_riunione=?");
         gLuogo_OpzioneRiunione = connection.prepareStatement("SELECT * FROM luogo_opzioni-riunion WHERE id_opzione-riunione=?");
         gIdUtente_Riunione = connection.prepareStatement("SELECT * FROM utente_riunione WHERE id_riunione=?");
-    
+        gIdGruppi_Utente = connection.prepareStatement("SELECT * FROM utente_gruppi WHERE id_utente=?");
+        gIdGruppi_Servizi = connection.prepareStatement("SELECT * FROM gruppi_servizi WHERE id_servizio=?");
+        gIdOpzioni_riunione_Riunione = connection.prepareStatement("SELECT * FROM opzioni_riunione__riunione WHERE id_riunione=?");//statement sulla relazione
+        gOpzioni_Riunione = connection.prepareStatement("SELECT * FROM opzioni_riunioni WHERE id=?");
+        gIdUtente_Gruppi = connection.prepareStatement("SELECT * FROM utente_gruppi WHERE id_gruppo=?");
+        
+         aUtente_Gruppo = connection.prepareStatement("INSERT INTO utente_gruppi (id_utente,id_gruppo) VALUES(?,?)");
     }
 
     @Override
@@ -690,14 +697,48 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
 
     @Override
     public List<Servizi> getServiziByGruppo(Gruppi gruppo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       List<Servizi> result = new ArrayList();
+        ResultSet rs = null;
+        ResultSet rs1 = null;
+        try{
+     //   System.out.println("riga 363" + riunione.getKey());
+            gIdGruppi_Servizi.setInt(1, gruppo.getKey());
+            rs = gIdGruppi_Servizi.executeQuery();
+            
+            while (rs.next()) {
+                
+            try{    
+                gServizi.setInt(1, rs.getInt("id_servizio"));
+               
+                rs1=gServizi.executeQuery();
+            } catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+            //System.out.println("riga 374" + rs1);
+                 while(rs1.next()){
+                 
+                  result.add(new ServiziMysqlImpl(this, rs1));
+                 }
+                
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+               if(rs!=null) rs.close();
+            } catch (SQLException ex) {
+                //
+            }
+        }
+        return result;
+        
+        
+        
     }  
 
-    @Override
-    public List<Utente> getUtentiByGruppo(Gruppi gruppo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }  
-
+    
     @Override
     public Luogo getLuogoByOpzioni_riunioni(Opzioni_riunioni opzioni_riunioni) {
 
@@ -739,6 +780,68 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
         return result;
     }
 
+    
+    
+      public void addUtenteToGruppi(Utente u,Gruppi g) {
+
+        try {
+            UtenteMysqlImpl ui = (UtenteMysqlImpl)u;
+            GruppiMysqlImpl gi = (GruppiMysqlImpl)g;
+            
+         //   System.out.println(ui.getKey());
+            
+            aUtente_Gruppo.setInt(1, ui.getKey());
+            aUtente_Gruppo.setInt(2, gi.getKey());
+            
+            aUtente_Gruppo.executeUpdate();
+            
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+      
+    
+    }
+      
+      
+     @Override
+    public List<Utente> getUtentiByGruppo(Gruppi gruppo) {
+
+        ResultSet rs;
+        List<Utente> utentiList = null;
+        
+        try {
+            gIdUtente_Gruppi.setInt(1, gruppo.getKey());
+            rs = gIdUtente_Gruppi.executeQuery();
+            utentiList = new ArrayList<Utente>();
+            
+            while(rs.next()){
+                Utente u = this.getUtente(rs.getInt("id_utente"));
+                utentiList.add(u);
+            }
+            
+            rs.close();
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayerMysqlImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    
+        
+        
+        return utentiList;
+    
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     @Override
     public Luogo getLuogoByRiunione(Riunione riunione) {
 
@@ -817,5 +920,155 @@ public class MeetingplanDataLayerMysqlImpl implements MeetingplanDataLayer {
             return result;
 
         }
+    }
+    
+    
+    
+    @Override
+    public List<Gruppi> getGruppiByServizi(Servizi servizi) {
+
+        List<Gruppi> result = new ArrayList();
+        ResultSet rs = null;
+        ResultSet rs1 = null;
+
+        try {
+
+            gIdGruppi_Servizi.setInt(1, servizi.getKey());
+            rs = gIdGruppi_Servizi.executeQuery();
+
+            while (rs != null && rs.next()) {
+
+                try {
+
+                    gGruppi.setInt(1, rs.getInt("id_gruppo"));
+                    rs1 = gGruppi.executeQuery();
+
+
+                } catch (SQLException exception) {
+                    Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, exception);
+                }
+
+                while (rs1 != null && rs1.next()) {
+                    result.add(new GruppiMysqlImpl(this, rs1));
+                }
+
+            }
+
+        } catch (SQLException exception) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, exception);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(MeetingplanDataLayerMysqlImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+
+        return result;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    @Override
+    public List<Gruppi> getGruppiByUtente(Utente utente) {
+
+        List<Gruppi> result = new ArrayList();
+        ResultSet rs = null;
+        ResultSet rs1 = null;
+        try {
+
+            gIdGruppi_Utente.setInt(1, utente.getKey());
+            rs = gIdGruppi_Utente.executeQuery();
+
+            while (rs != null && rs.next()) {
+
+                try {
+
+                    gGruppi.setInt(1, rs.getInt("id_gruppo"));
+                    rs1 = gGruppi.executeQuery();
+
+
+                } catch (SQLException exception) {
+                    Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, exception);
+                }
+
+                while (rs1 != null && rs1.next()) {
+                    result.add(new GruppiMysqlImpl(this, rs1));
+                }
+
+            }
+
+        } catch (SQLException exception) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, exception);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(MeetingplanDataLayerMysqlImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<Opzioni_riunioni> getOpzioni_riunioniByRiunione(Riunione riunione){//test ok
+        List<Opzioni_riunioni> result = new ArrayList();
+        ResultSet rs = null;
+        ResultSet rs1 = null;
+        try{
+     //   System.out.println("riga 363" + riunione.getKey());
+            gIdOpzioni_riunione_Riunione.setInt(1, riunione.getKey());
+            rs = gIdOpzioni_riunione_Riunione.executeQuery();
+            
+            while (rs.next()) {
+                
+            try{    
+                gOpzioni_Riunione.setInt(1, rs.getInt("id_opzioni-riunione"));
+               
+                rs1=gOpzioni_Riunione.executeQuery();
+            } catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+            //System.out.println("riga 374" + rs1);
+                 while(rs1.next()){
+                 
+                  result.add(new Opzioni_riunioniMysqlImpl(this, rs1));
+                 }
+                
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MeetingplanDataLayer.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+               if(rs!=null) rs.close();
+            } catch (SQLException ex) {
+                //
+            }
+        }
+        return result;
+        
+        
+        
+    
     }
 }
