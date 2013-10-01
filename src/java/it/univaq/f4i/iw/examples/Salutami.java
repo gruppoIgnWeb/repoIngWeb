@@ -58,94 +58,27 @@ public class Salutami extends HttpServlet {
     }
 
     private void action_saluta_noto(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
-        
-        
-         int i;
-        Statement s = null;
-        ResultSet rs = null;
+
+
         Connection connection;
-        
-        
-        
-        
-        
-        
-        /*
-        try {
-            //Class.forName(getServletContext().getInitParameter("data.jdbc.driver"));
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Salutami.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-            //connessione al database locale
-            //DBMS connection
-        /*
-            connection = DriverManager.getConnection(getServletContext().getInitParameter("data.jdbc.connectionstring"), getServletContext().getInitParameter("data.jdbc.username"), getServletContext().getInitParameter("data.jdbc.password"));
-        */
-        
-            DataSource ds = (DataSource) getServletContext().getAttribute("datasource");
-            //connessione al database locale
-            //database connection
-            connection = ds.getConnection();
-            
-          MeetingplanDataLayer data=new MeetingplanDataLayerMysqlImpl(connection);
-        
-      /*  Utente utente= data.createUtente();
-        utente.setNome(request.getParameter("n"));
-        data.addUtente(utente);*/
-        
-    /*    Gruppi gruppi=data.createGruppi();
-         gruppi=data.getGruppi(1);
-        //System.out.println("riga 87" + riunione.getDescrizione());
-          List<Servizi> servizi =gruppi.getServizi();
-          Iterator<Servizi> iterator = servizi.iterator();
-	while (iterator.hasNext()) {
-            Servizi opzion=iterator.next();
-		System.out.println(opzion.getNome());
-	}*/
+        DataSource ds = (DataSource) getServletContext().getAttribute("datasource");
+        connection = ds.getConnection();
+
+        MeetingplanDataLayer data = new MeetingplanDataLayerMysqlImpl(connection);
           
-        
-        Riunione riunione= data.getRiunione(1);
-       /* Gruppi gruppi=data.getGruppi(1);
-        utente.addToGruppi(gruppi);*/
-        System.out.println("riga 87" + riunione.getData());
-        
-        
-        
-        
-        
-          
-        //System.out.println("riga 87" + luogo.getNome());
-        
-        
+        Riunione riunione = data.getRiunione(1);
+
         HTMLResult result = new HTMLResult(getServletContext());
         result.setTitle("Salutami!");
-      //  result.setBody("<p>Hello, " + luogo.getNome()+ "!</p>");
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        result.appendToBody(riunione.getDescrizione());
+        result.appendToBody("ciao");
+
         result.activate(request, response);
     }
 
     private void action_saluta_anonimo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HTMLResult result = new HTMLResult(getServletContext());
-       
+
         result.setTitle("Salutami!");
         result.appendToBody("<p>Hello!</p>");
         result.appendToBody("<form method=\"get\" action=\"salutami\">");
@@ -154,7 +87,7 @@ public class Salutami extends HttpServlet {
         result.appendToBody("<input type=\"submit\" name=\"s\" value=\"Hello!\"/>");
         result.appendToBody("</p>");
         result.appendToBody("</form>");
-        
+
         result.appendToBody("<p><small>I'm greeting all users since " + sdf.format(startup.getTime()) + "</small></p>");
         result.activate(request, response);
     }
